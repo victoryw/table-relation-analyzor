@@ -1,0 +1,18 @@
+{
+  "name": "table-relation-analyzor",
+  "version": "1.0.0",
+  "description": "to visualize the depedency of table from DDL",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "visualize",
+    "table"
+  ],
+  "author": "victoryw",
+  "license": "MIT",
+  "dependencies": {
+    "readline": "^1.3.0"
+  }
+}
