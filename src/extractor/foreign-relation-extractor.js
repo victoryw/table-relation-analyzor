@@ -1,4 +1,4 @@
-const R = require('ramda');
+import R from "ramda";
 
 const foreignRelationStruct = (mainTableName) => {
   const mainTable = mainTableName;

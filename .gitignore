@@ -1,5 +1,7 @@
 
 # Created by https://www.gitignore.io/api/node,macos,intellij+all
+lib/
+dist/
 ### confidential file
 tablev.sql
 
