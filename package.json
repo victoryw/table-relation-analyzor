@@ -4,7 +4,7 @@
   "description": "to visualize the depedency of table from DDL",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/mocha --recursive './spec/**/*.spec.js'"
   },
   "keywords": [
     "visualize",
@@ -14,6 +14,12 @@
   "license": "MIT",
   "dependencies": {
     "graphviz": "^0.0.8",
-    "line-reader": "^0.4.0"
+    "line-reader": "^0.4.0",
+    "lodash": "^4.17.10",
+    "ramda": "^0.25.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0"
   }
 }

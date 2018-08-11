@@ -1,34 +1,22 @@
-const graphviz = require('graphviz');
 const lineReader = require('line-reader');
+const R = require('ramda');
+
+const foreignRelationExtractor = require('./src/extractor/foreign-relation-extractor');
 
 const fileName = './tablev.sql';
-const tableRelation = graphviz.digraph("Tables");
-const extractTableName = line => {
-  if(line.includes('CREATE TABLE')) {
-    const firstMarkAsBeginning = line.indexOf("\"");
-    const lastMarkAsEnd = line.lastIndexOf("\"");
-    return line.substring(firstMarkAsBeginning, lastMarkAsEnd + 1);
-  }
-  return null;
+
+const foreignRelation = foreignRelationExtractor();
+
+const done = () => {
+  R.each(relation => {
+    console.log('relation is ', relation.getMainTable());
+  }, foreignRelation.getRelation());
 };
 
-let lastTable;
-
 lineReader.eachLine(fileName, (line, last) => {
-  const tableName = extractTableName(line);
-
-  if(!!tableName) {
-    const node = tableRelation.addNode(tableName,  {"color" : "blue"});
-    node.set( "style", "filled" );
-    if(!!lastTable) {
-      const edge =tableRelation.addEdge( node,  lastTable);
-      edge.set( "color", "red" );
-    }
-    lastTable = tableName;
-  }
-
+  foreignRelation.extract(line);
   if (last) {
-    console.log( tableRelation.to_dot() );
+    done();
     return false;
   }
 });
