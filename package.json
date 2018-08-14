@@ -1,6 +1,7 @@
 {
   "name": "table-relation-analyzor",
   "version": "1.0.0",
+  "engines" : { "node" : ">=v10.8.0", "npm" : ">=6.3.0" },
   "description": "to visualize the depedency of table from DDL",
   "main": "index.js",
   "scripts": {
