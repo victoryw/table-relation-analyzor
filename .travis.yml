@@ -5,3 +5,4 @@ script:
   - yarn install
   - yarn eslint
   - yarn test
+  - yarn run cover
