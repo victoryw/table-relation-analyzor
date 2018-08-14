@@ -1,3 +1,7 @@
 language: node_js
 node_js:
   - "v10.8.0"
+script:
+  - yarn install
+  - yarn eslint
+  - yarn test
