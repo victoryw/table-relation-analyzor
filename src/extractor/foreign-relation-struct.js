@@ -1,4 +1,4 @@
-exports.foreignRelationStruct = (mainTableName) => {
+const foreignRelationStruct = (mainTableName) => {
   const mainTable = mainTableName;
   const foreignTables = [];
 
@@ -11,3 +11,5 @@ exports.foreignRelationStruct = (mainTableName) => {
     getForeignTables: () => foreignTables,
   };
 };
+
+module.exports = foreignRelationStruct;

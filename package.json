@@ -6,7 +6,8 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test nyc mocha --opts ./spec/mocha.opts --recursive './spec/**/*.spec.js'",
     "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
-    "start": "npm run build && node dist/index.js"
+    "start": "npm run build && node dist/index.js",
+    "eslint": "eslint ./src ./spec"
   },
   "keywords": [
     "visualize",
