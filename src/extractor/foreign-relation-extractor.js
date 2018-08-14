@@ -1,62 +1,54 @@
-import R from "ramda";
+import R from 'ramda'
+import foreignRelationStruct from './foreign-relation-struct'
 
-const foreignRelationStruct = (mainTableName) => {
-  const mainTable = mainTableName;
-  const foreignTables = [];
-
-  return {
-    addForeignTable: foreignTableName => {
-      foreignTables.push(foreignTableName);
-    },
-    getMainTable: () => {
-      return mainTable;
-    },
-
-    getForeignTables: () => {
-      return foreignTables;
-    }
-  };
-};
+const spaceSplitter = ' ';
 
 const extractAlterTableName = (line) => {
-  const alterCommands = "ALTER TABLE".split(" ");
-  const foreignKeyClause = "FOREIGN KEY";
-  const addConstraintCommand = "ADD CONSTRAINT";
-
-
+  const alterCommands = 'ALTER TABLE'.split(spaceSplitter)
   const tables = R.pipe(
-      R.split(' '),
-      R.ifElse(
-          R.pipe(
-              R.intersection(alterCommands),
-              R.equals(alterCommands)
-          ),
-          R.apply((...array) => array[2]),
-          R.apply(()=> null)
-      )
-  );
+    R.split(' '),
+    R.ifElse(
+      R.pipe(
+        R.intersection(alterCommands),
+        R.equals(alterCommands)
+      ),
+      R.apply((...array) => array[2]),
+      R.apply(() => null)
+    )
+  )
+  return tables(line)
+}
 
-  return tables(line);
-};
 
+const extractReferTableFun = foreignRelationStruts => R.pipe(
+    R.split(spaceSplitter),
+    R.ifElse(
+        R.and(
+            R.apply((...array) => array.some(part => part === "REFERENCES")),
+            R.apply(() => foreignRelationStruts.length > 0)
+        ),
+        R.apply((...array) => array[1]),
+        R.apply(() => null)
+    )
+);
 const extractForeignRelation = () => {
-  const foreignRelationStruts = [];
+  const foreignRelationStruts = []
   return {
     getRelation: () => {
-      return foreignRelationStruts;
+      return foreignRelationStruts
     },
     extract: line => {
-      const alterTableName = extractAlterTableName(line);
-      if (!R.isEmpty(alterTableName)) {
-        foreignRelationStruts.push(foreignRelationStruct(alterTableName));
+      const alterTableName = extractAlterTableName(line)
+      if (!R.isNil(alterTableName)) {
+        foreignRelationStruts.push(foreignRelationStruct(alterTableName))
       }
 
-      // if (line.indexOf("REFERENCES") === 0) {
-      //   const relation = foreignRelationStruts[foreignRelationStruts.length - 1];
-      //   relation.addForeignTable(line);
-      // }
+      const referTableName = extractReferTableFun(foreignRelationStruts)(line)
+      if(!R.isNil(referTableName)) {
+        foreignRelationStruts[foreignRelationStruts.length - 1].addForeignTable(referTableName);
+      }
     }
   }
-};
+}
 
-module.exports = extractForeignRelation;
+module.exports = extractForeignRelation
