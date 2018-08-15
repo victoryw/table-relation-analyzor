@@ -30,8 +30,8 @@ const extractReferTableFun = (foreignRelationStruts) => {
         hasMainTable,
         R.contains('REFERENCES'),
       ),
-      R.apply((...array) => array[1]),
-      R.apply(() => null),
+      array => array[1],
+      () => null,
     ),
   );
 };
