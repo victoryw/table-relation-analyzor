@@ -55,6 +55,6 @@
     ],
     "sourceMap": false,
     "instrument": false,
-    "exclude": "./spec/**/*.js"
+    "exclude": "spec/**/*.js"
   }
 }
