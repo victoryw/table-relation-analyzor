@@ -5,13 +5,14 @@ const spaceSplitter = ' ';
 
 const extractAlterTableName = () => {
   const alterCommands = 'ALTER TABLE'.split(spaceSplitter);
+  const isCommandWithAlterTable = R.pipe(
+    R.intersection(alterCommands),
+    R.equals(alterCommands),
+  );
   return R.pipe(
     R.split(spaceSplitter),
     R.ifElse(
-      R.pipe(
-        R.intersection(alterCommands),
-        R.equals(alterCommands),
-      ),
+      isCommandWithAlterTable,
       array => array[2],
       () => null,
     ),
@@ -21,13 +22,14 @@ const extractAlterTableName = () => {
 
 const extractReferTableFun = (foreignRelationStruts) => {
   const hasMainTable = () => foreignRelationStruts.length > 0;
+  const shouldExtractAsReferTable = R.both(
+    hasMainTable,
+    R.contains('REFERENCES'),
+  );
   return R.pipe(
     R.split(spaceSplitter),
     R.ifElse(
-      R.both(
-        hasMainTable,
-        R.contains('REFERENCES'),
-      ),
+      shouldExtractAsReferTable,
       array => array[1],
       () => null,
     ),
