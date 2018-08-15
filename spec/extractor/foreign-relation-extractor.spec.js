@@ -23,7 +23,7 @@ describe('foreign relation extract', () => {
       lineExtractor.extract(correctMainTableCommand);
       lineExtractor.extract(referTableCommand);
 
-      const tableRelation = R.head(lineExtractor.getRelation());
+      const tableRelation = R.head(lineExtractor.getRelations());
       tableRelation.getMainTable().should.equal(expectMainTableName);
       R.head(tableRelation.getForeignTables()).should.equal(expectedReferTableName);
     });
@@ -32,8 +32,8 @@ describe('foreign relation extract', () => {
   describe('main table extract test', () => {
     it('should extract the main table', () => {
       lineExtractor.extract(correctMainTableCommand);
-      lineExtractor.getRelation().should.to.have.lengthOf(1);
-      R.head(lineExtractor.getRelation()).getMainTable().should.equal(expectMainTableName);
+      lineExtractor.getRelations().should.to.have.lengthOf(1);
+      R.head(lineExtractor.getRelations()).getMainTable().should.equal(expectMainTableName);
     });
 
     it('should not extract the main table when the input line format is without alter table', () => {
@@ -42,23 +42,23 @@ describe('foreign relation extract', () => {
         + 'FOREIGN KEY ("BASIC_ID")';
 
       lineExtractor.extract(invalidMainTableInputLine);
-      lineExtractor.getRelation().should.to.have.lengthOf(0);
+      lineExtractor.getRelations().should.to.have.lengthOf(0);
     });
   });
 
   describe('refer table extract test', () => {
     const pushMainTable = (mainTableName, extractor) => {
       const mainTable = foreignRelationStruct(mainTableName);
-      extractor.getRelation().push(mainTable);
+      extractor.getRelations().push(mainTable);
     };
 
     it('should extract the refer table', () => {
       pushMainTable('mainTable', lineExtractor);
       lineExtractor.extract(referTableCommand);
 
-      const foreignTables = R.head(lineExtractor.getRelation()).getForeignTables();
+      const foreignTables = R.head(lineExtractor.getRelations()).getForeignTables();
       foreignTables.should.to.have.lengthOf(1);
-      lineExtractor.getRelation().should.to.have.lengthOf(1);
+      lineExtractor.getRelations().should.to.have.lengthOf(1);
       R.head(foreignTables).should.equal(expectedReferTableName);
     });
 
@@ -67,13 +67,13 @@ describe('foreign relation extract', () => {
       pushMainTable('mainTable', lineExtractor);
       lineExtractor.extract(invalidReferTableCommand);
 
-      const foreignTables = R.head(lineExtractor.getRelation()).getForeignTables();
+      const foreignTables = R.head(lineExtractor.getRelations()).getForeignTables();
       foreignTables.should.have.lengthOf(0);
     });
 
     it('should not extract refer table when no main table', () => {
       lineExtractor.extract(referTableCommand);
-      lineExtractor.getRelation().should.to.have.lengthOf(0);
+      lineExtractor.getRelations().should.to.have.lengthOf(0);
     });
 
     it('should extract refer table with last main table when there are multiple main tables', () => {
@@ -85,7 +85,7 @@ describe('foreign relation extract', () => {
 
       const mainTableFinder = mainTableName => R.find(
         relation => relation.getMainTable() === mainTableName,
-        lineExtractor.getRelation(),
+        lineExtractor.getRelations(),
       );
 
       mainTableFinder(mainTable1Name).getForeignTables().should.to.have.lengthOf(0);

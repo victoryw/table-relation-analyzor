@@ -39,7 +39,7 @@ const extractReferTableFun = (foreignRelationStruts) => {
 const extractForeignRelation = () => {
   const foreignRelationStruts = [];
   return {
-    getRelation: () => foreignRelationStruts,
+    getRelations: () => foreignRelationStruts,
     extract: (line) => {
       const alterTableName = extractAlterTableName()(line);
       if (!R.isNil(alterTableName)) {

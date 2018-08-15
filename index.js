@@ -7,7 +7,7 @@ const fileName = './tablev.sql';
 const foreignRelation = foreignRelationExtractor();
 
 const done = () => {
-  foreignRelation.getRelation().forEach((relation) => {
+  foreignRelation.getRelations().forEach((relation) => {
     const mainTable = relation.getMainTable();
     console.log(`relation is ${mainTable}`);
     relation.getForeignTables().forEach(referTable => console.log(` refer table is ${referTable}`));
