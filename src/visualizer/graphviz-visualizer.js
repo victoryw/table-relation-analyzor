@@ -1,5 +1,4 @@
 import * as graphviz from 'graphviz';
-import R from 'ramda';
 
 const graphvizVisualizer = (relations) => {
   const g = graphviz.digraph('G');
@@ -11,5 +10,4 @@ const graphvizVisualizer = (relations) => {
   });
   return g;
 };
-
 module.exports = graphvizVisualizer;

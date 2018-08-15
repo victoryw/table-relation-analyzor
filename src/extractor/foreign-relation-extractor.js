@@ -20,17 +20,21 @@ const extractAlterTableName = (line) => {
 };
 
 
-const extractReferTableFun = foreignRelationStruts => R.pipe(
-  R.split(spaceSplitter),
-  R.ifElse(
-    R.both(
-      R.apply(() => foreignRelationStruts.length > 0),
-      R.apply((...array) => array.some(part => part === 'REFERENCES')),
+const extractReferTableFun = (foreignRelationStruts) => {
+  const hasMainTable = () => foreignRelationStruts.length > 0;
+
+  return R.pipe(
+    R.split(spaceSplitter),
+    R.ifElse(
+      R.both(
+        hasMainTable,
+        R.contains('REFERENCES'),
+      ),
+      R.apply((...array) => array[1]),
+      R.apply(() => null),
     ),
-    R.apply((...array) => array[1]),
-    R.apply(() => null),
-  ),
-);
+  );
+};
 
 const extractForeignRelation = () => {
   const foreignRelationStruts = [];
