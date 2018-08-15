@@ -8,7 +8,9 @@ const foreignRelation = foreignRelationExtractor();
 
 const done = () => {
   foreignRelation.getRelation().forEach((relation) => {
-    console.log(`relation is ${relation.getMainTable()}`);
+    const mainTable = relation.getMainTable();
+    console.log(`relation is ${mainTable}`);
+    relation.getForeignTables().forEach(referTable => console.log(` refer table is ${referTable}`));
   });
 };
 

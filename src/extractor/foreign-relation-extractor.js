@@ -23,9 +23,9 @@ const extractAlterTableName = (line) => {
 const extractReferTableFun = foreignRelationStruts => R.pipe(
   R.split(spaceSplitter),
   R.ifElse(
-    R.and(
-      R.apply((...array) => array.some(part => part === 'REFERENCES')),
+    R.both(
       R.apply(() => foreignRelationStruts.length > 0),
+      R.apply((...array) => array.some(part => part === 'REFERENCES')),
     ),
     R.apply((...array) => array[1]),
     R.apply(() => null),
