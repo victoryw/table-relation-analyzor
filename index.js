@@ -1,16 +1,15 @@
-const lineReader = require('line-reader');
-const R = require('ramda');
+import lineReader from 'line-reader';
 
-const foreignRelationExtractor = require('./src/extractor/foreign-relation-extractor');
+import foreignRelationExtractor from './src/extractor/foreign-relation-extractor';
 
 const fileName = './tablev.sql';
 
 const foreignRelation = foreignRelationExtractor();
 
 const done = () => {
-  R.each(relation => {
-    console.log('relation is ', relation.getMainTable());
-  }, foreignRelation.getRelation());
+  foreignRelation.getRelation().forEach((relation) => {
+    console.log(`relation is ${relation.getMainTable()}`);
+  });
 };
 
 lineReader.eachLine(fileName, (line, last) => {
@@ -19,5 +18,5 @@ lineReader.eachLine(fileName, (line, last) => {
     done();
     return false;
   }
+  return true;
 });
-
