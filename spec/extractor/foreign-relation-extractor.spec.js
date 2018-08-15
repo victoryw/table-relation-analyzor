@@ -5,18 +5,33 @@ import foreignRelationStruct from '../../src/extractor/foreign-relation-struct';
 
 describe('foreign relation extract', () => {
   const expectMainTableName = '"PICCPROD"."T_PRODUCT_FEE"';
-  const correctMainTableInputLine = `ALTER TABLE ${expectMainTableName} `
+  const correctMainTableCommand = `ALTER TABLE ${expectMainTableName} `
     + 'ADD CONSTRAINT "FK_PRODUCT_FEE__BASIC_ID" '
     + 'FOREIGN KEY ("BASIC_ID")';
+
+  const expectedReferTableName = '"PICCPROD"."T_CONTRACT_PRODUCT"';
+  const referTableCommand = `REFERENCES ${expectedReferTableName} ("ITEM_ID") ENABLE NOVALIDATE;`;
+
 
   let lineExtractor = null;
   beforeEach(() => {
     lineExtractor = foreignRelationExtractor();
   });
 
+  describe('integration scenario', () => {
+    it('should extract the table relation', () => {
+      lineExtractor.extract(correctMainTableCommand);
+      lineExtractor.extract(referTableCommand);
+
+      const tableRelation = R.head(lineExtractor.getRelation());
+      tableRelation.getMainTable().should.equal(expectMainTableName);
+      R.head(tableRelation.getForeignTables()).should.equal(expectedReferTableName);
+    });
+  });
+
   describe('main table extract test', () => {
     it('should extract the main table', () => {
-      lineExtractor.extract(correctMainTableInputLine);
+      lineExtractor.extract(correctMainTableCommand);
       lineExtractor.getRelation().should.to.have.lengthOf(1);
       R.head(lineExtractor.getRelation()).getMainTable().should.equal(expectMainTableName);
     });
@@ -32,9 +47,6 @@ describe('foreign relation extract', () => {
   });
 
   describe('refer table extract test', () => {
-    const expectedReferTableName = '"PICCPROD"."T_CONTRACT_PRODUCT"';
-    const referTableCommand = `REFERENCES ${expectedReferTableName} ("ITEM_ID") ENABLE NOVALIDATE;`;
-
     const pushMainTable = (mainTableName, extractor) => {
       const mainTable = foreignRelationStruct(mainTableName);
       extractor.getRelation().push(mainTable);
