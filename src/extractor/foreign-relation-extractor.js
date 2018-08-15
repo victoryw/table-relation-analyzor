@@ -3,26 +3,24 @@ import foreignRelationStruct from './foreign-relation-struct';
 
 const spaceSplitter = ' ';
 
-const extractAlterTableName = (line) => {
+const extractAlterTableName = () => {
   const alterCommands = 'ALTER TABLE'.split(spaceSplitter);
-  const tables = R.pipe(
-    R.split(' '),
+  return R.pipe(
+    R.split(spaceSplitter),
     R.ifElse(
       R.pipe(
         R.intersection(alterCommands),
         R.equals(alterCommands),
       ),
-      R.apply((...array) => array[2]),
-      R.apply(() => null),
+      array => array[2],
+      () => null,
     ),
   );
-  return tables(line);
 };
 
 
 const extractReferTableFun = (foreignRelationStruts) => {
   const hasMainTable = () => foreignRelationStruts.length > 0;
-
   return R.pipe(
     R.split(spaceSplitter),
     R.ifElse(
@@ -41,7 +39,7 @@ const extractForeignRelation = () => {
   return {
     getRelation: () => foreignRelationStruts,
     extract: (line) => {
-      const alterTableName = extractAlterTableName(line);
+      const alterTableName = extractAlterTableName()(line);
       if (!R.isNil(alterTableName)) {
         foreignRelationStruts.push(foreignRelationStruct(alterTableName));
       }
