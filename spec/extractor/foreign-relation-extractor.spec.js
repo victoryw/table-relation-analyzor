@@ -5,7 +5,8 @@ import foreignRelationStruct from '../../src/extractor/foreign-relation-struct';
 
 describe('foreign relation extract', () => {
   const expectMainTableName = '"PICCPROD"."T_PRODUCT_FEE"';
-  const correctMainTableCommand = `ALTER TABLE ${expectMainTableName} `
+  const correctMainTableCommand = ' '
+    + `ALTER TABLE ${expectMainTableName} `
     + 'ADD CONSTRAINT "FK_PRODUCT_FEE__BASIC_ID" '
     + 'FOREIGN KEY ("BASIC_ID")';
 

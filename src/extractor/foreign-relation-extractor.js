@@ -41,12 +41,13 @@ const extractForeignRelation = () => {
   return {
     getRelations: () => foreignRelationStruts,
     extract: (line) => {
-      const alterTableName = extractAlterTableName()(line);
+      const trimLine = line.trim();
+      const alterTableName = extractAlterTableName()(trimLine);
       if (!R.isNil(alterTableName)) {
         foreignRelationStruts.push(foreignRelationStruct(alterTableName));
       }
 
-      const referTableName = extractReferTableFun(foreignRelationStruts)(line);
+      const referTableName = extractReferTableFun(foreignRelationStruts)(trimLine);
       if (!R.isNil(referTableName)) {
         foreignRelationStruts[foreignRelationStruts.length - 1].addForeignTable(referTableName);
       }
