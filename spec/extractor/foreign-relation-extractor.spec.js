@@ -4,14 +4,14 @@ import foreignRelationExtractor from '../../src/extractor/foreign-relation-extra
 import foreignRelationStruct from '../../src/extractor/foreign-relation-struct';
 
 describe('foreign relation extract', () => {
-  const expectMainTableName = '"PICCPROD"."T_PRODUCT_FEE"';
+  const expectedMainTable = 'T_PRODUCT_FEE';
   const correctMainTableCommand = ' '
-    + `ALTER TABLE ${expectMainTableName} `
+    + `ALTER TABLE ${`"PICCPROD"."${expectedMainTable}"`} `
     + 'ADD CONSTRAINT "FK_PRODUCT_FEE__BASIC_ID" '
     + 'FOREIGN KEY ("BASIC_ID")';
 
-  const expectedReferTableName = '"PICCPROD"."T_CONTRACT_PRODUCT"';
-  const referTableCommand = `REFERENCES ${expectedReferTableName} ("ITEM_ID") ENABLE NOVALIDATE;`;
+  const expectedReferTableName = 'T_CONTRACT_PRODUCT';
+  const referTableCommand = `REFERENCES ${`"PICCPROD"."${expectedReferTableName}"`} ("ITEM_ID") ENABLE NOVALIDATE;`;
 
 
   let lineExtractor = null;
@@ -25,7 +25,7 @@ describe('foreign relation extract', () => {
       lineExtractor.extract(referTableCommand);
 
       const tableRelation = R.head(lineExtractor.getRelations());
-      tableRelation.getMainTable().should.equal(expectMainTableName);
+      tableRelation.getMainTable().should.equal(expectedMainTable);
       R.head(tableRelation.getForeignTables()).should.equal(expectedReferTableName);
     });
   });
@@ -34,7 +34,7 @@ describe('foreign relation extract', () => {
     it('should extract the main table', () => {
       lineExtractor.extract(correctMainTableCommand);
       lineExtractor.getRelations().should.to.have.lengthOf(1);
-      R.head(lineExtractor.getRelations()).getMainTable().should.equal(expectMainTableName);
+      R.head(lineExtractor.getRelations()).getMainTable().should.equal(expectedMainTable);
     });
 
     it('should not extract the main table when the input line format is without alter table', () => {

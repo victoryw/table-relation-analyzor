@@ -36,6 +36,18 @@ const extractReferTableFun = (foreignRelationStruts) => {
   );
 };
 
+const extractTableName = tablename => R.pipe(
+  R.split('.'),
+  R.ifElse(
+    array => array.length === 2,
+    array => array[1],
+    () => {
+      throw new Error('not an array');
+    },
+  ),
+  name => name.replace(/"/gi, ''),
+)(tablename);
+
 const extractForeignRelation = () => {
   const foreignRelationStruts = [];
   return {
@@ -44,12 +56,18 @@ const extractForeignRelation = () => {
       const trimLine = line.trim();
       const alterTableName = extractAlterTableName()(trimLine);
       if (!R.isNil(alterTableName)) {
-        foreignRelationStruts.push(foreignRelationStruct(alterTableName));
+        foreignRelationStruts.push(foreignRelationStruct(
+          extractTableName(alterTableName),
+        ));
       }
 
       const referTableName = extractReferTableFun(foreignRelationStruts)(trimLine);
       if (!R.isNil(referTableName)) {
-        foreignRelationStruts[foreignRelationStruts.length - 1].addForeignTable(referTableName);
+        const foreignTableName = extractTableName(referTableName);
+        foreignRelationStruts[foreignRelationStruts.length - 1]
+          .addForeignTable(
+            foreignTableName,
+          );
       }
     },
   };
