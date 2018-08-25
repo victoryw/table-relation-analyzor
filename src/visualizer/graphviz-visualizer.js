@@ -7,9 +7,8 @@ const constructNodes = (relations, g) => {
     });
   });
 };
-const graphvizVisualizer = (relations) => {
+module.exports = (relations) => {
   const g = graphviz.digraph('G');
   constructNodes(relations, g);
   return g;
 };
-module.exports = graphvizVisualizer;

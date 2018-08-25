@@ -48,30 +48,32 @@ const extractTableName = tablename => R.pipe(
   name => name.replace(/"/gi, ''),
 )(tablename);
 
-const extractForeignRelation = () => {
+module.exports = () => {
   const foreignRelationStruts = [];
+  const extractMainTable = (trimLine) => {
+    const alterTableName = extractAlterTableName()(trimLine);
+    if (!R.isNil(alterTableName)) {
+      foreignRelationStruts.push(foreignRelationStruct(
+        extractTableName(alterTableName),
+      ));
+    }
+  };
+  const extractReferTable = (trimLine) => {
+    const referTableName = extractReferTableFun(foreignRelationStruts)(trimLine);
+    if (!R.isNil(referTableName)) {
+      const foreignTableName = extractTableName(referTableName);
+      foreignRelationStruts[foreignRelationStruts.length - 1]
+        .addForeignTable(
+          foreignTableName,
+        );
+    }
+  };
   return {
     getRelations: () => foreignRelationStruts,
     extract: (line) => {
       const trimLine = line.trim();
-      const alterTableName = extractAlterTableName()(trimLine);
-      if (!R.isNil(alterTableName)) {
-        foreignRelationStruts.push(foreignRelationStruct(
-          extractTableName(alterTableName),
-        ));
-      }
-
-      const referTableName = extractReferTableFun(foreignRelationStruts)(trimLine);
-      if (!R.isNil(referTableName)) {
-        const foreignTableName = extractTableName(referTableName);
-        foreignRelationStruts[foreignRelationStruts.length - 1]
-          .addForeignTable(
-            foreignTableName,
-          );
-      }
+      extractMainTable(trimLine);
+      extractReferTable(trimLine);
     },
   };
 };
-
-
-module.exports = extractForeignRelation;
