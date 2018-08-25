@@ -1,5 +1,6 @@
-import R from 'ramda';
+import 'chai/register-expect';
 import 'chai/register-should';
+import R from 'ramda';
 import foreignRelationExtractor from '../../src/extractor/foreign-relation-extractor';
 import foreignRelationStruct from '../../src/extractor/foreign-relation-struct';
 
@@ -44,6 +45,16 @@ describe('foreign relation extract', () => {
 
       lineExtractor.extract(invalidMainTableInputLine);
       lineExtractor.getRelations().should.to.have.lengthOf(0);
+    });
+
+    it('should throw error when table name not connect with dot', () => {
+      const errorTableNameCommand = `ALTER TABLE NAME ${expectedMainTable} `
+        + 'ADD CONSTRAINT "FK_PRODUCT_FEE__BASIC_ID" '
+        + 'FOREIGN KEY ("BASIC_ID")';
+
+      expect(() => {
+        lineExtractor.extract(errorTableNameCommand);
+      }).to.throw('table name should connect with dot');
     });
   });
 
@@ -94,6 +105,16 @@ describe('foreign relation extract', () => {
       const foreignTables = mainTableFinder(mainTable2Name).getForeignTables();
       foreignTables.should.to.have.lengthOf(1);
       R.head(foreignTables).should.equal(expectedReferTableName);
+    });
+
+    it('should throw error when table name not connect with dot', () => {
+      pushMainTable('mainTable', lineExtractor);
+
+      const errorTableNameCommand = `REFERENCES ${expectedReferTableName} ("ITEM_ID") ENABLE NOVALIDATE;`;
+
+      expect(() => {
+        lineExtractor.extract(errorTableNameCommand);
+      }).to.throw('table name should connect with dot');
     });
   });
 });

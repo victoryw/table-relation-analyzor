@@ -42,7 +42,7 @@ const extractTableName = tablename => R.pipe(
     array => array.length === 2,
     array => array[1],
     () => {
-      throw new Error('not an array');
+      throw new Error('table name should connect with dot');
     },
   ),
   name => name.replace(/"/gi, ''),
