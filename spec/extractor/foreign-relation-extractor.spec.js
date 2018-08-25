@@ -1,8 +1,9 @@
-import 'chai/register-expect';
 import 'chai/register-should';
 import R from 'ramda';
+import { expect } from 'chai';
 import foreignRelationExtractor from '../../src/extractor/foreign-relation-extractor';
 import foreignRelationStruct from '../../src/extractor/foreign-relation-struct';
+
 
 describe('foreign relation extract', () => {
   const expectedMainTable = 'T_PRODUCT_FEE';
