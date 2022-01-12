@@ -24,7 +24,7 @@
   "dependencies": {
     "graphviz": "^0.0.8",
     "line-reader": "^0.4.0",
-    "ramda": "^0.25.0",
+    "ramda": "^0.27.2",
     "single-line-log": "^1.1.2"
   },
   "devDependencies": {
